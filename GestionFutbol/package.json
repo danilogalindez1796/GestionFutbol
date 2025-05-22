@@ -55,6 +55,9 @@
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.6.1",
     "@vinejs/vine": "^3.0.1",
+    "bootstrap": "^5.3.6",
+    "react-bootstrap": "^2.10.10",
+    "react-router-dom": "^7.6.0",
     "reflect-metadata": "^0.2.2"
   },
   "hotHook": {

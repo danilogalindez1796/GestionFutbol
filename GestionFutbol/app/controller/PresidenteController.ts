@@ -35,7 +35,7 @@ export default class  PresidenteController {
     const { nombre } = request.body();
 
     const result = await pgDatabase.query(
-        'UPDATE "Presidentes" SET "nombre" = $1,  WHERE "dni" = $2',
+        'UPDATE "Presidentes" SET "nombre" = $1  WHERE "dni" = $2',
         [nombre, dni]
     );
 

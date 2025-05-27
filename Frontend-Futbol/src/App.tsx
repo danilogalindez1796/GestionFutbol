@@ -9,6 +9,7 @@ import Actualizar from "./ActualizarEquipos";
 import FormularioPresidente from "./FormularioPresidente";
 import ListarPresidentes from "./ListarPresidente";
 import ActualizarPresidentes from "./ActualizarPresidente";
+import EditarPresidente from "./Actualizarps";
 
 
 
@@ -25,6 +26,7 @@ const App: React.FC = () => {
         <Route path="/Actualizar/equipos" element={<Actualizar></Actualizar>}></Route>
         <Route path="/Actualizar/presidentes" element={<ActualizarPresidentes></ActualizarPresidentes>}></Route>
         <Route path="/ActualizarEq" element={<EditarEquipo></EditarEquipo>}></Route>
+        <Route path="/ActualizarPresin" element={<EditarPresidente></EditarPresidente>}></Route>
       </Routes>
     </Router>
   )

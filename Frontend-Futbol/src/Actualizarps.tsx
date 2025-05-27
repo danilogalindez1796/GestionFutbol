@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const EditarPresidente = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const ids = location.state; // DNI enviado desde otra vista
+  const ids = location.state;
 
   const [dni_presidente, setDni_presidente] = useState<number>(0);
   const [nombre, setNombre] = useState<string>("");
@@ -19,7 +19,7 @@ const EditarPresidente = () => {
 
   const TraerPresi = async () => {
     const respuesta = await fetch(`http://localhost:7000/presidente/${ids}`);
-    const equipo = await respuesta.json(); // objeto con dni y nombre
+    const equipo = await respuesta.json();
     setDni_presidente(equipo.dni);
     setNombre(equipo.nombre);
   };
@@ -28,11 +28,12 @@ const EditarPresidente = () => {
     const respuesta = await fetch(`http://localhost:7000/presidente/${ids}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre }),
-    });
-
+      body: JSON.stringify({ nombre }), }
+    );
     const resultado = await respuesta.json();
     setMensaje(resultado.mensaje);
+    navigate("/Actualizar/presidentes");
+
   };
 
   return (

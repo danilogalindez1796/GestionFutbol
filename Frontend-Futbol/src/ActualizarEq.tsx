@@ -40,12 +40,20 @@ const EditarEquipo = () => {
 
     const resultado = await respuesta.json();
     setMensaje(resultado.mensaje);
+    navigate("/Actualizar/equipos");
+
   };
 
   return (
     <Container className="mt-5">
       <h2 className="text-center text-warning mb-4">🛠️ Editar Equipo</h2>
       <Form>
+         <Form.Group className="mb-3">
+           <Form.Label>ID</Form.Label>
+           <Form.Control type="text" value={id} disabled />
+           </Form.Group>
+
+
         <Form.Group className="mb-3">
           <Form.Label>Nombre</Form.Label>
           <Form.Control

@@ -7,6 +7,22 @@ export default class  PresidenteController {
         const result = await pgDatabase.query('SELECT * FROM "Presidentes"');
         return response.json ({mensaje: "Informacion de los presidentes  obtenida", data: result.rows});
     }
+    async listarPresidenteDni ({ params, response }){
+    const dni = params.dni;
+
+    const result = await pgDatabase.query(
+        'SELECT * FROM "Presidentes" WHERE "dni" = $1',
+        [dni]
+    );
+
+    if (result.rowCount > 0) {
+        return response.json(result.rows[0]);
+    } else {
+        response.status = 404;
+        return response.json({ mensaje: "Presidente no encontrado" });
+    }
+}
+
 
 
     async CrearPresidente ({request, response}){

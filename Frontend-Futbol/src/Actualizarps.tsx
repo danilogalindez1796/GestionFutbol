@@ -5,33 +5,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const EditarPresidente = () => {
   const navigate = useNavigate();
-  const location = useLocation();  
+  const location = useLocation();
+  const ids = location.state; // DNI enviado desde otra vista
+
   const [dni_presidente, setDni_presidente] = useState<number>(0);
   const [nombre, setNombre] = useState<string>("");
   const [mensaje, setMensaje] = useState<string>("");
 
   useEffect(() => {
-      console.log("ID recibido:", ids);
-        TraerPresi();
-     },[]);
+    console.log("ID recibido:", ids);
+    TraerPresi();
+  }, []);
 
-    const TraerPresi = async () => {
-      const respuesta = await fetch(`http://localhost:7000/presidente/${ids}`);
-      const dato = await respuesta.json();
-      const equipo = dato.mensaje[0]; 
-      setDni_presidente(equipo.dni_presidente);
-      setNombre(equipo.nombre);
-    };
-
-      const ids = location.state; 
-
-
+  const TraerPresi = async () => {
+    const respuesta = await fetch(`http://localhost:7000/presidente/${ids}`);
+    const equipo = await respuesta.json(); // objeto con dni y nombre
+    setDni_presidente(equipo.dni);
+    setNombre(equipo.nombre);
+  };
 
   const actualizar = async () => {
     const respuesta = await fetch(`http://localhost:7000/presidente/${ids}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({  nombre  }),
+      body: JSON.stringify({ nombre }),
     });
 
     const resultado = await respuesta.json();
@@ -41,7 +38,13 @@ const EditarPresidente = () => {
   return (
     <Container className="mt-5">
       <h2 className="text-center text-warning mb-4">🛠️ Editar Presidente</h2>
+
       <Form>
+        <Form.Group className="mb-3">
+          <Form.Label>DNI</Form.Label>
+          <Form.Control type="text" value={dni_presidente} disabled />
+        </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>Nombre</Form.Label>
           <Form.Control
@@ -51,6 +54,7 @@ const EditarPresidente = () => {
             placeholder="Nombre del presidente"
           />
         </Form.Group>
+
         <Button variant="primary" onClick={actualizar}>
           Guardar Cambios
         </Button>

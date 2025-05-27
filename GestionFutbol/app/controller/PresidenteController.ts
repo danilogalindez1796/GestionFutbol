@@ -2,6 +2,13 @@ import pgDatabase from "../database/pgDatabase.js";
 
 export default class  PresidenteController {
 
+
+    async listarPresidente ({request, response}){
+        const result = await pgDatabase.query('SELECT * FROM "Presidentes"');
+        return response.json ({mensaje: "Informacion de los presidentes  obtenida", data: result.rows});
+    }
+
+
     async CrearPresidente ({request, response}){
         const {  dni_presidente, nombre} = request.body();
 

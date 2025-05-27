@@ -8,3 +8,5 @@ Router.get('/equipos/:id', Equipos.EquiposID);
 Router.post('/equipos', Equipos.CrearEquipo);
 Router.put('/equipos/:id', Equipos.EditarEquipo)
 Router.delete('/equipos/:id', Equipos.EliminarEquipo)
+
+Router.get('/equipos/buscar/:valor',Equipos.buscarEquipos)

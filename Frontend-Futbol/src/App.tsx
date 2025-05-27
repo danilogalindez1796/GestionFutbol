@@ -5,7 +5,10 @@ import Navbars from "./Navbar";
 import ListarEquipos from "./ListarEquipos";
 import FormularioEquipos from "./FormularioEquipos";
 import EditarEquipo from "./ActualizarEq";
-import Actualizar from "./Actualizar";
+import Actualizar from "./ActualizarEquipos";
+import FormularioPresidente from "./FormularioPresidente";
+import ListarPresidentes from "./ListarPresidente";
+import ActualizarPresidentes from "./ActualizarPresidente";
 
 
 
@@ -15,9 +18,12 @@ const App: React.FC = () => {
     <Router>
       <Navbars></Navbars>
       <Routes>
-        <Route path="/Crear"element={<FormularioEquipos></FormularioEquipos>}></Route>
-        <Route path="/Listar" element={<ListarEquipos></ListarEquipos>}></Route>
-        <Route path="/Actualizar" element={<Actualizar></Actualizar>}></Route>
+        <Route path="/crear/equipos"element={<FormularioEquipos></FormularioEquipos>}></Route>
+        <Route path="/crear/presidente"element={<FormularioPresidente></FormularioPresidente>}></Route>
+        <Route path="/Listar/equipos" element={<ListarEquipos></ListarEquipos>}></Route>
+        <Route path="/Listar/presidentes" element={<ListarPresidentes></ListarPresidentes>}></Route>
+        <Route path="/Actualizar/equipos" element={<Actualizar></Actualizar>}></Route>
+        <Route path="/Actualizar/presidentes" element={<ActualizarPresidentes></ActualizarPresidentes>}></Route>
         <Route path="/ActualizarEq" element={<EditarEquipo></EditarEquipo>}></Route>
       </Routes>
     </Router>

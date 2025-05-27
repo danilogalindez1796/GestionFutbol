@@ -1,6 +1,7 @@
 import pgDatabase from "../database/pgDatabase.js";
 
 export default class EquiposController {
+
     async listarEquipos ({request, response}){
         const result = await pgDatabase.query('SELECT * FROM "Equipos"');
         return response.json ({mensaje: "Informacion del equipo obtenida", data: result.rows});
@@ -15,7 +16,7 @@ export default class EquiposController {
 
 
     async CrearEquipo ({request, response}){
-        const { id, nombre, anio_fundado, dni_presidente } = request.body();
+        const { nombre, anio_fundado, dni_presidente } = request.body();
 
         if (typeof nombre !== "string") {
             return response.json({mensaje: "El equipo debe llevar un nombre."});
@@ -24,11 +25,11 @@ export default class EquiposController {
             return response.json({mensaje: "El quipo debe llevar una fecha de fundacion."})
         }
         const result = await pgDatabase.query(
-            'INSERT INTO "Equipos" ("id", "nombre", "anio_fundado", "dni_presidente") VALUES ($1, $2, $3, $4) RETURNING *',
-            [id, nombre, anio_fundado, dni_presidente]
+            'INSERT INTO "Equipos" ( "nombre", "anio_fundado", "dni_presidente") VALUES ($1, $2, $3 ) RETURNING *',
+            [nombre, anio_fundado, dni_presidente]
         );
         if (result.rowCount >0) {
-            return response.json({mensaje: "Equipo nuevo", data:result.rows[0]});
+            return response.json({mensaje: "Equipo nuevo creado", data:result.rows[0]});
         }
         else {
             return response.json ({mensaje:"El equipo no se creo"});
@@ -65,4 +66,27 @@ export default class EquiposController {
 
         return response.json({ mensaje: "Equipo y presidente eliminados" });
     }
+
+
+
+
+    async buscarEquipos({ request, response, params }) {
+    const valor = params.valor;
+
+    const result = await pgDatabase.query(
+        `SELECT * FROM "Equipos"
+         WHERE nombre ILIKE $1 OR anio_fundado = $2`,
+        [`%${valor}%`, Number(valor) || -1]
+    );
+
+     if (result.rowCount > 0) {
+        return response.json({
+            mensaje: "Equipo encontrado exitosamente",
+            data:result.rows[0]
+        });
+    } else {
+        return response.json({ mensaje: "Equipo no encontrado"  });
+    }
+
+    }   
 }

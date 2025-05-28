@@ -5,15 +5,12 @@ export default class  PresidenteController {
 
     async listarPresidente ({request, response}){
         const result = await pgDatabase.query('SELECT * FROM "Presidentes"');
-        return response.json ({mensaje: "Informacion de los presidentes  obtenida", data: result.rows});
+        return response.json ({data: result.rows});
     }
     async listarPresidenteDni ({ params, response }){
     const dni = params.dni;
-
-    const result = await pgDatabase.query(
-        'SELECT * FROM "Presidentes" WHERE "dni" = $1',
-        [dni]
-    );
+    const result = await pgDatabase.query('SELECT * FROM "Presidentes" WHERE "dni" = $1',
+        [dni]);
 
     if (result.rowCount > 0) {
         return response.json(result.rows[0]);
@@ -24,17 +21,23 @@ export default class  PresidenteController {
 }
 
 
-
     async CrearPresidente ({request, response}){
-        const {  dni_presidente, nombre} = request.body();
+        const {  dni, nombre} = request.body();
 
         if (typeof nombre !== "string") {
             return response.json({mensaje: "El equipo debe llevar un nombre."});
         }
-        
+        const validar = await pgDatabase.query(
+            'SELECT * FROM "Presidentes" WHERE "dni" = $1',
+            [dni]
+        );
+        if (validar.rowCount > 0) {
+            return response.json({ mensaje: "El DNI del presidente ya existen." });
+        }
+    
         const result = await pgDatabase.query(
-            'INSERT INTO "Presidentes" ("dni_presidente", "nombre" ) VALUES ($1, $2) RETURNING *',
-            [dni_presidente, nombre]
+            'INSERT INTO "Presidentes" ("dni", "nombre" ) VALUES ($1, $2) RETURNING *',
+            [dni, nombre]
         );
         if (result.rowCount >0) {
             return response.json({mensaje: "nuevo presidente creado", data:result.rows[0]});
@@ -43,7 +46,6 @@ export default class  PresidenteController {
             return response.json ({mensaje:"El presidente no se creo"});
         }
     }
-
 
 
    async EditarPresidente({ request, response, params }) {
@@ -57,12 +59,21 @@ export default class  PresidenteController {
 
     if (result.rowCount > 0) {
         return response.json({
-            mensaje: "Equipo actualizado exitosamente",
+            mensaje: "Presidente actualizado exitosamente",
             data: { dni, nombre }
         });
     } else {
-        return response.json({ mensaje: "Equipo no encontrado o no se actualizó" });
+        return response.json({ mensaje: "Presidente no encontrado o no se actualizó" });
     }
   }
+
+  async EliminarPresidente({ params, request, response }) {
+        const Dni = params.dni;
+
+        await pgDatabase.query(
+            'DELETE FROM "Presidentes" WHERE dni = $1',[Dni]);
+
+        return response.json({ mensaje: "Presidente y equipo eliminados" });
+    }
 }
 

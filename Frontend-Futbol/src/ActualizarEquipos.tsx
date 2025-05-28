@@ -17,7 +17,7 @@ const Actualizar: React.FC = () => {
   const Listar = async () => {
     const rest = await fetch("http://localhost:7000/equipos");
     const datos = await rest.json();
-    setEquipos(datos.data);
+    setEquipos(datos.mensaje);
   };
 
   const Eliminar = async (id: number) => {
@@ -28,7 +28,6 @@ const Actualizar: React.FC = () => {
     });
 
     const msj = await restp.json();
-    alert(msj.mensaje || "Equipo eliminado");
     Listar();
   };
 

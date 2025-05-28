@@ -2,37 +2,43 @@ import pgDatabase from "../database/pgDatabase.js";
 
 export default class EquiposController {
 
-    async listarEquipos ({request, response}){
+    async ListarEquipos ({request, response}){
         const result = await pgDatabase.query('SELECT * FROM "Equipos"');
-        return response.json ({mensaje: "Informacion del equipo obtenida", data: result.rows});
+        return response.json ({mensaje: result.rows});
     }
 
 
-    async EquiposID({params, request, response}) {
+    async ListarEquiposID({params, request, response}) {
         const id=params.id;
         const result= await pgDatabase.query (`SELECT * FROM "Equipos" WHERE "id" = ${id}; `)
         return response.json({mensaje: result.rows})
     }
 
 
-    async CrearEquipo ({request, response}){
-        const { nombre, anio_fundado, dni_presidente } = request.body();
+     async CrearEquipo({ request, response }) {
+        const { id, nombre, anio_fundado, dni_presidente } = request.body();
 
         if (typeof nombre !== "string") {
-            return response.json({mensaje: "El equipo debe llevar un nombre."});
+            return response.json({ mensaje: "El equipo debe llevar un nombre." });
         }
-        if (typeof anio_fundado !== "number"){
-            return response.json({mensaje: "El quipo debe llevar una fecha de fundacion."})
+        if (typeof anio_fundado !== "number") {
+            return response.json({ mensaje: "El equipo debe llevar una fecha de fundación válida." });
+        }
+        const validar = await pgDatabase.query(
+            'SELECT * FROM "Equipos" WHERE "id" = $1 OR "dni_presidente" = $2',
+            [id, dni_presidente]
+        );
+        if (validar.rowCount > 0) {
+            return response.json({ mensaje: "El ID del equipo o el DNI del presidente ya existen." });
         }
         const result = await pgDatabase.query(
-            'INSERT INTO "Equipos" ( "nombre", "anio_fundado", "dni_presidente") VALUES ($1, $2, $3 ) RETURNING *',
-            [nombre, anio_fundado, dni_presidente]
+            'INSERT INTO "Equipos" ( "nombre", "anio_fundado", "dni_presidente") VALUES ($1, $2, $3) RETURNING *',
+            [ nombre, anio_fundado, dni_presidente]
         );
-        if (result.rowCount >0) {
-            return response.json({mensaje: "Equipo nuevo creado", data:result.rows[0]});
-        }
-        else {
-            return response.json ({mensaje:"El equipo no se creo"});
+        if (result.rowCount > 0) {
+            return response.json({ mensaje: "Equipo Creado", data: result.rows[0] });
+        } else {
+            return response.json({ mensaje: "El equipo no se creó" });
         }
     }
 
@@ -57,7 +63,6 @@ export default class EquiposController {
   }
 
 
-
     async EliminarEquipo({ params, request, response }) {
         const id = params.id;
 
@@ -66,8 +71,6 @@ export default class EquiposController {
 
         return response.json({ mensaje: "Equipo y presidente eliminados" });
     }
-
-
 
 
     async buscarEquipos({ request, response, params }) {

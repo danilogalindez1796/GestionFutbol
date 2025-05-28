@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const FormularioPresidente: React.FC = () => {
-  const [dni_presidente, setDni_presidente] = useState<number>(0);
+  const [dni, setDni] = useState<number>(0);
   const [nombre, setNombre] = useState<string>("");
   const [mensaje, setMensaje] = useState<string>("");
 
@@ -11,7 +11,7 @@ const FormularioPresidente: React.FC = () => {
     const respuesta = await fetch("http://localhost:7000/presidente", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ dni_presidente, nombre }),
+      body: JSON.stringify({ dni, nombre }),
     });
     const msj = await respuesta.json();
     setMensaje(msj.mensaje);
@@ -28,7 +28,7 @@ const FormularioPresidente: React.FC = () => {
               <Form.Control
                 type="number"
                 placeholder="Escribe el DNI del presidente"
-                onChange={(e) => setDni_presidente(Number(e.target.value))}
+                onChange={(e) => setDni(Number(e.target.value))}
               />
             </Form.Group>
 
